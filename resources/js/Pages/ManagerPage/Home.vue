@@ -9,16 +9,19 @@ import { route, Link, useForm } from '@inertiajs/inertia-vue3';
 import Button from 'primevue/button';
 import Image from 'primevue/image';
 import Dialog from 'primevue/dialog';
+import Toast from 'primevue/toast';
 
 export default {
     props: {
-        requestForms: { type: Object, default: () => [] }
+        requestForms: { type: Object, default: () => [] },
+        flash: { type: Object, default: null },
     },
     data() {
         return {
             data: this.requestForms,
             showDetail: false,
             requestDetail: null,
+            toastPosition: { type: String, default: 'top-center' },
             columns: [
                 { field: 'id', header: 'ID' },
                 { field: 'user_name', header: 'Staff' },
@@ -29,16 +32,27 @@ export default {
                 { field: 'end', header: 'End date' },
                 { field: 'reason', header: 'Reason' },
                 { field: 'status', header: 'Status' },
-                { field: 'type', header: 'Action' },
+                { field: '', header: 'Action' },
             ],
             form: useForm({
                 id: null,
                 type: null,
-                status: {type:String,default:'pending'},
+                status: { type: String, default: 'pending' },
             }),
             searchQuery: '',
             filteredData: this.requestForms
         };
+    },
+    mounted() {
+        this.toastPosition = 'top-center'
+        this.$toast.add({ severity: 'info', summary: 'Info', detail: 'Message Content', life: 3050 });
+        if (this.flash.success) {
+            toastPosition = 'bottom-right'
+            this.$toast.add({ severity: 'success', summary: 'Success Message', detail: this.flash.success, group: 'br', life: 3000 });
+        } else if (this.flash.error) {
+            toastPosition = 'bottom-right'
+            this.$toast.add({ severity: 'error', summary: 'Error Message', detail: this.flash.error, group: 'br', life: 3000 });
+        }
     },
     components: {
         AuthenticatedLayout,
@@ -50,14 +64,15 @@ export default {
         InputText,
         Link,
         Image,
-        Dialog
+        Dialog,
+        Toast
     },
     methods: {
         handleDetial(event) {
             this.requestDetail = event
             this.showDetail = !this.showDetail
         },
-        handleStatus(data,status) {
+        handleStatus(data, status) {
             this.form.type = data.type
             this.form.id = data.id
             this.form.status = status
@@ -97,15 +112,15 @@ export default {
                             </IconField>
                             <div class="flex justifu-center space-x-2">
                                 <Link :href="route('request-manger-create')">
-                                <Button label="New" icon="pi pi-users" raised />
+                                <Button label="New request" icon="pi pi-book" raised />
                                 </Link>
                             </div>
                         </div>
                     </template>
-                    <template #empty>    
+                    <template #empty>
                         <div class="w-full h-32 font-semibold text-xl flex space-x-2 items-center justify-center">
                             <p>Oop! No data found.</p> <i class="pi pi-database" style="font-size: 2rem"></i>
-                        </div> 
+                        </div>
                     </template>
                     <Column v-for="col in columns" :field="col.field" :header="col.header">
                         <template #body="{ data }">
@@ -114,17 +129,26 @@ export default {
                                 <div v-html="data[col.field].substr(0, 20) + '...'"></div>
                             </div>
                             <div v-else-if="col.header === 'Status'" @click="handleDetial(data)">
-                                <span class="bg-yellow-400 p-2 text-yellow-50">
+                                <div v-if="data[col.field] === 'pending'"
+                                    class="bg-yellow-400 w-full text-center p-2 text-yellow-50">
                                     {{ data[col.field] }}
-                                </span>
+                                </div>
+                                <div v-if="data[col.field] === 'approved'"
+                                    class="bg-green-400 w-full text-center p-2 text-green-50">
+                                    {{ data[col.field] }}
+                                </div>
+                                <div v-if="data[col.field] === 'rejected'"
+                                    class="bg-red-400 w-full text-center p-2 text-red-50">
+                                    {{ data[col.field] }}
+                                </div>
                             </div>
                             <div v-else @click="handleDetial(data)">
                                 {{ data[col.field] }}
                             </div>
                             <div v-if="col.header == 'Action'" class="flex justify-center space-x-2">
-                                <Button @click="handleStatus(data, 'approved')" label="Approve" severity="info"
+                                <Button @click="handleStatus(data, 'approved')" class="w-24" label="Approve" severity="info"
                                     raised />
-                                <Button @click="handleStatus(data, 'rejected')" label="Reject" severity="danger"
+                                <Button @click="handleStatus(data, 'rejected')" class="w-24" label="Reject" severity="danger"
                                     raised />
                             </div>
                         </template>
@@ -149,9 +173,18 @@ export default {
                     <div class="border text-center p-2">{{ requestDetail?.end }}</div>
                     <div class="border text-center p-2">Status</div>
                     <div class="border text-center p-2">
-                        <span class="bg-yellow-400 p-2 text-yellow-50">{{
-                            requestDetail?.status
-                        }}</span>
+                        <div v-if="requestDetail.status === 'pending'"
+                            class="bg-yellow-400 w-full text-center p-2 text-yellow-50">
+                            {{ requestDetail.status }}
+                        </div>
+                        <div v-if="requestDetail.status === 'approved'"
+                            class="bg-green-400 w-full text-center p-2 text-green-50">
+                            {{ requestDetail.status }}
+                        </div>
+                        <div v-if="requestDetail.status === 'rejected'"
+                            class="bg-red-400 w-full text-center p-2 text-red-50">
+                            {{ requestDetail.status }}
+                        </div>
                     </div>
                     <div class="border text-center p-2 col-span-2">Reason</div>
                     <div class="border flex-wrap p-2 col-span-2">
@@ -160,6 +193,6 @@ export default {
                 </div>
             </Dialog>
         </div>
-
     </AuthenticatedLayout>
+    <Toast :position="toastPosition" group="br" />
 </template>

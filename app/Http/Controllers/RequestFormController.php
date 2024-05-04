@@ -24,13 +24,13 @@ class RequestFormController extends Controller
         $type = $request->type;
         $status = $request->status;
         $id = $request->id;
-
         if ($permission->approver === 1) {
             if ($type === 'mission') {
                 $requestForm = RequestForm::find($id);
                 $requestForm->update([
                     'status' => $status
                 ]);
+                return redirect()->back()->with('success', 'The request was update successfully.');
             }
         } elseif ($permission->approver === 2) {
             if ($type === 'leave') {
@@ -38,6 +38,7 @@ class RequestFormController extends Controller
                 $requestForm->update([
                     'status' => $status
                 ]);
+                return redirect()->back()->with('success', 'The request was update successfully.');
             }
         } elseif ($permission->approver === 3) {
             if ($type === 'leave' || $type === 'mission') {
@@ -45,26 +46,29 @@ class RequestFormController extends Controller
                 $requestForm->update([
                     'status' => $status
                 ]);
+                return redirect()->back()->with('success', 'The request was update successfully.');
             }
         }
-
-        return redirect()->back();
+        return redirect()->back()->with('error', 'Failed to update the request.');
     }
 
     public function show()
     {
         $user = Auth::user();
         $id = $user->id;
-        $requestForm = RequestForm::join('departments','departments.id','=','request_forms.department_Id')
-        ->select('request_forms.id as id','request_forms.title as title',
-        'request_forms.start_date as start_date',
-        'request_forms.end_date as end_date',
-        'request_forms.reason as reason',
-        'request_forms.status as status',
-        'request_forms.type as type',
-        'departments.name as department_name')
-        ->where('request_forms.user_Id', $id)
-        ->orderByDesc('request_forms.id')->get();
+        $requestForm = RequestForm::join('departments', 'departments.id', '=', 'request_forms.department_Id')
+            ->select(
+                'request_forms.id as id',
+                'request_forms.title as title',
+                'request_forms.start_date as start_date',
+                'request_forms.end_date as end_date',
+                'request_forms.reason as reason',
+                'request_forms.status as status',
+                'request_forms.type as type',
+                'departments.name as department_name'
+            )
+            ->where('request_forms.user_Id', $id)
+            ->orderByDesc('request_forms.id')->get();
         return Inertia::render('UserPage/Home', ['requestForms' => $requestForm]);
     }
     public function createForStaff()
@@ -99,7 +103,7 @@ class RequestFormController extends Controller
         $startDate = date('Y/m/d', strtotime($request->start_date));
         $endDate = date('Y/m/d', strtotime($request->end_date));
 
-        RequestForm::create([
+        $requestForm = RequestForm::create([
             'title' => $request->title,
             'department_Id' => $request->department_Id,
             'start_date' => $startDate,
@@ -108,7 +112,11 @@ class RequestFormController extends Controller
             'type' => $request->type,
             'user_Id' => Auth::user()->id
         ]);
-        return redirect()->route('request');
+        if ($requestForm)
+            return redirect()->route('request')->with('success', 'The request was created successfully.');
+        else
+            return redirect()->route('request')->with('error', 'Failed to update the request.');
+
     }
 
 

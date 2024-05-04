@@ -8,11 +8,13 @@ import IconField from 'primevue/IconField';
 import { route, Link } from '@inertiajs/inertia-vue3';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import Toast from 'primevue/toast';
 
 
 export default {
     props: {
-        requestForms: { type: Object, default: () => [] }
+        requestForms: { type: Object, default: () => [] },
+        flash: { type: Object, default: null },
     },
     data() {
         return {
@@ -31,6 +33,13 @@ export default {
             filteredData: this.requestForms
         };
     },
+    mounted() {
+        if (this.flash.success) {
+            this.$toast.add({ severity: 'success', summary: 'Success Message', detail: this.flash.success, group: 'br', life: 3000 });
+        } else if (this.flash.error) {
+            this.$toast.add({ severity: 'error', summary: 'Error Message', detail: this.flash.error, group: 'br', life: 3000 });
+        }
+    },
     components: {
         AuthenticatedLayout,
         DataTable,
@@ -40,7 +49,8 @@ export default {
         IconField,
         InputText,
         Link,
-        Dialog
+        Dialog,
+        Toast
     },
     methods: {
         handleDetial(event) {
@@ -94,15 +104,15 @@ export default {
                     <Column v-for="col in columns" :field="col.field" :header="col.header">
                         <template #body="{ data }">
                             <div v-if="col.header == 'Status'" @click="handleDetial(data)">
-                                <div v-if="data[col.field] === 'pending'"
+                                <div v-if="data[col.field] === 'pending'" 
                                     class="bg-yellow-400 w-full text-center p-2 text-yellow-50">
                                     {{ data[col.field] }}
                                 </div>
-                                <div v-if="data[col.field] === 'approved'" @click="handleDetial(data)"
+                                <div v-if="data[col.field] === 'approved'" 
                                     class="bg-green-400 w-full text-center p-2 text-green-50">
                                     {{ data[col.field] }}
                                 </div>
-                                <div v-if="data[col.field] === 'rejected'" @click="handleDetial(data)"
+                                <div v-if="data[col.field] === 'rejected'" 
                                     class="bg-red-400 w-full text-center p-2 text-red-50">
                                     {{ data[col.field] }}
                                 </div>
@@ -153,6 +163,6 @@ export default {
                 </div>
             </Dialog>
         </div>
-
     </AuthenticatedLayout>
+    <Toast position="bottom-right" group="br" />
 </template>

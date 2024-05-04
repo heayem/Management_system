@@ -3,12 +3,12 @@
         <Menu :model="items">
             <template #item="{ item, props }">
                 <Link v-if="item.route" :href="item.route">
-                <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                <a   v-bind="props.action" @click="navigate">
                     <span :class="item.icon" />
                     <span class="ml-2">{{ item.label }}</span>
                 </a>
                 </Link>
-                <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+                <a v-else :href="item.url" :target="item.target" v-bind="props.action">
                     <span :class="item.icon" />
                     <span class="ml-2">{{ item.label }}</span>
                 </a>

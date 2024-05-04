@@ -67,7 +67,7 @@ export default {
             this.form.profile = file
         },
         submit() {
-            this.form.post(route('employee-edit'), {
+            this.form.post(route('employee-update'), {
                 onFinish: () => this.form.reset(
                     'password',
                     'password_confirmation'),

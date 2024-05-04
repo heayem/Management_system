@@ -49,7 +49,7 @@ class RequestForm extends Model
             )
             ->where('employee_departments.department_Id', User::getDeparment())
             ->where('request_forms.type', $permission)
-            ->where('request_forms.status', 'pending')
+            // ->where('request_forms.status', 'pending')
             ->distinct();
     }
 

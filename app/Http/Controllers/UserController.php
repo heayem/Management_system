@@ -17,6 +17,7 @@ class UserController extends Controller
 
         $users = User::getusers()->get();
         return Inertia::render('AdminPage/ListEmployee', ['users' => $users]);
+
     }
     public function edit($id)
     {
@@ -29,16 +30,25 @@ class UserController extends Controller
     {
         $this->authorizeAdministrator();
 
-        User::updateUser($request->all());
-        return redirect('employee');
+        $updated = User::updateUser($request->all());
+        
+        if ($updated) {
+            return redirect('employee')->with('success', 'The user was updated successfully.');
+        } else {
+            return redirect('employee')->with('error', 'Failed to update the user.');
+        }
     }
     public function destroy($id)
     {
         $this->authorizeAdministrator();
 
-        User::deleteUser($id);
-        $users = User::getusers()->get();
-        return Inertia::render('AdminPage/ListEmployee', ['users' => $users]);
+        $deleted = User::deleteUser($id);
+
+        if ($deleted) {
+            return redirect('employee')->with('success', 'The user was deleted successfully.');
+        } else {
+            return redirect('employee')->with('error', 'Failed to delete the user.');
+        }
     }
 
     private function authorizeAdministrator()

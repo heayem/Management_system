@@ -8,6 +8,7 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import PrimeVue from 'primevue/config';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import ToastService from 'primevue/toastservice';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -19,6 +20,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(PrimeVue, { ripple: true })
+            .use(ToastService)
             .mount(el);
     },
     progress: {

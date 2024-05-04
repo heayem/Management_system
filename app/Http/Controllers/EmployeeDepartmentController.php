@@ -14,7 +14,7 @@ class EmployeeDepartmentController extends Controller
     public function index()
     {
         $this->authorizeAdministrator();
-        
+
         $departments = EmployeeDepartment::getusersAndDepartment()->orderBy('users.id')->get();
         return Inertia::render('AdminPage/ListEmployeeDepartment', ['users' => $departments]);
     }
@@ -29,11 +29,11 @@ class EmployeeDepartmentController extends Controller
         ])->first();
 
         if ($existingRecord) {
-            return redirect('employee-edit-department');
+            return redirect('employee-edit-department')->with('error', 'Failed to assign the user.');
         } else {
             EmployeeDepartment::assignPermission($requestData);
         }
-        return redirect()->route('employee-department');
+        return redirect()->route('employee-department')->with('success', 'The assign was successfully.');
     }
 
     public function department()
@@ -48,11 +48,12 @@ class EmployeeDepartmentController extends Controller
     {
         $this->authorizeAdministrator();
 
-        if (EmployeeDepartment::removeFromDepartment($user_Id, $departments_Id)) {
-            $departments = EmployeeDepartment::getusersAndDepartment()->orderBy('users.id')->get();
-            return Inertia::render('AdminPage/ListEmployeeDepartment', ['users' => $departments]);
-        }
-        return redirect()->route('employee-department');
+        $deleted = EmployeeDepartment::removeFromDepartment($user_Id, $departments_Id);
+        if ($deleted)
+            return redirect()->route('employee-department')->with('success', 'The user was remove successfully.');
+        else
+            return redirect()->route('employee-department')->with('error', 'Failed to remove the user.');
+
     }
 
     private function authorizeAdministrator()

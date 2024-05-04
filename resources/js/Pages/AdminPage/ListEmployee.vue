@@ -1,6 +1,6 @@
 <script>
 import MainLayout from '@/Pages/MainLayout.vue';
-import { useForm } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import InputText from 'primevue/inputtext';
@@ -10,11 +10,14 @@ import { route, Link } from '@inertiajs/inertia-vue3';
 import Button from 'primevue/button';
 import Image from 'primevue/image';
 import axios from 'axios'
+import Toast from 'primevue/toast';
+
 
 
 export default {
     props: {
-        users: { type: Object, default: () => [] }
+        users: { type: Object, default: () => [] },
+        flash: { type: Object, default: null },
     },
     data() {
         return {
@@ -28,6 +31,9 @@ export default {
                 { field: 'role', header: 'Role' },
                 { field: 'id', header: 'Action' }
             ],
+            formDelete: useForm({
+                id: null,
+            }),
             form: useForm({
                 id: null,
                 fname: null,
@@ -49,14 +55,18 @@ export default {
         IconField,
         InputText,
         Link,
-        Image
+        Image,
+        Toast
+    },
+    mounted() {
+        if (this.flash.success) {
+            this.$toast.add({ severity: 'success', summary: 'Success Message', detail: this.flash.success, group: 'br', life: 3000 });
+        } else if (this.flash.error) {
+            this.$toast.add({ severity: 'error', summary: 'Error Message', detail: this.flash.error, group: 'br', life: 3000 });
+        }
     },
     methods: {
-       
-        updateProfile(data) {
-            this.form = data
-            this.form.post(route('profile.update'));
-        },
+
         search() {
             const query = this.searchQuery.toLowerCase();
             this.filteredData = this.users.filter(user =>
@@ -70,7 +80,7 @@ export default {
         },
         async handleDelete(id) {
             await axios.delete('employee-delete/' + id)
-        }
+        },
     }
 }
 </script>
@@ -80,8 +90,8 @@ export default {
     <MainLayout>
         <div class="w-full h-screen">
             <div class="p-5 card ">
-                <DataTable :value="filteredData"  paginator showGridlines :rows="5"
-                    :rowsPerPageOptions="[5, 10, 20, 50]" selectionMode="single" dataKey="id"
+                <DataTable :value="filteredData" paginator showGridlines :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
+                    selectionMode="single" dataKey="id"
                     :globalFilterFields="['fname', 'lname', 'phone', 'role', 'departments']" :metaKeySelection="false">
                     <template #header>
                         <div class="flex justify-between">
@@ -98,10 +108,10 @@ export default {
                             </div>
                         </div>
                     </template>
-                    <template #empty> 
+                    <template #empty>
                         <div class="w-full h-32 font-semibold text-xl flex space-x-2 items-center justify-center">
                             <p>Oop! No data found.</p> <i class="pi pi-database" style="font-size: 2rem"></i>
-                        </div> 
+                        </div>
                     </template>
                     <Column v-for="col in columns" :field="col.field" :header="col.header">
                         <template #body="{ data }">
@@ -113,9 +123,9 @@ export default {
                             </div>
                             <div v-else class="flex justify-center space-x-2">
                                 <Link :href="'employee-edit/' + data[col.field]">
-                                <Button label="Edit" icon="pi pi-pen-to-square" severity="info" raised />
+                                <Button class="w-28" label="Edit" icon="pi pi-pen-to-square" severity="info" raised />
                                 </Link>
-                                <Button label="Delete" type="submit" @click="handleDelete(data[col.field])"
+                                <Button class="w-28" label="Delete" type="submit" @click="handleDelete(data[col.field])"
                                     icon="pi pi-trash" severity="danger" raised />
                             </div>
                         </template>
@@ -124,4 +134,5 @@ export default {
             </div>
         </div>
     </MainLayout>
+    <Toast position="bottom-right" group="br" />
 </template>
