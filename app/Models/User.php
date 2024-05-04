@@ -38,7 +38,8 @@ class User extends Authenticatable
     public function scopeMyPermission($query)
     {
         return $query->leftjoin('employee_departments', 'users.id', '=', 'employee_departments.user_Id')
-            ->select('employee_departments.approver');
+            ->select('employee_departments.approver')
+            ->where('users.id', Auth::user()->id);
     }
 
 

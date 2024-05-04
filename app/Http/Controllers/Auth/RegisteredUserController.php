@@ -30,6 +30,10 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
 
+        if (!Auth::user()->hasRole('administrator')) {
+            abort(403, 'Unauthorized action. Only administrators can access this resource.');
+        }
+
         $request->validate([
             'fname' => 'required|string|max:255',
             'lname' => 'required|string|max:255',
@@ -45,6 +49,6 @@ class RegisteredUserController extends Controller
         $user = User::createUser($request->all());
         event(new Registered($user));
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect('employee')->with('success', 'The user was created successfully.');
     }
 }
