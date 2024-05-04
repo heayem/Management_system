@@ -72,7 +72,7 @@ class RequestFormController extends Controller
         $user = Auth::user();
         $id = $user->id;
         $departments = Department::getDepartment()->where('employee_departments.user_Id', $id)->get();
-        return Inertia::render('UserPage/CreateFequestForm', ['departments' => $departments]);
+        return Inertia::render('UserPage/CreateRequestForm', ['departments' => $departments]);
     }
 
     public function createForManger()
@@ -80,7 +80,7 @@ class RequestFormController extends Controller
         $user = Auth::user();
         $id = $user->id;
         $departments = Department::getDepartment()->where('employee_departments.user_Id', $id)->get();
-        return Inertia::render('ManagerPage/CreateFequestForm', ['departments' => $departments]);
+        return Inertia::render('ManagerPage/CreateRequestForm', ['departments' => $departments]);
     }
 
     public function store(Request $request)
