@@ -6,12 +6,15 @@ import InputText from 'primevue/inputtext';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Button from 'primevue/button';
+import Toast from 'primevue/toast';
 
 
 
 export default {
     props: {
-        department: Array,
+        department: [Array,Object],
+        flash: { type: Object, default: null },
+
     },
     components: {
         InputError,
@@ -21,7 +24,8 @@ export default {
         Link,
         Head,
         AuthenticatedLayout,
-        Button
+        Button,
+        Toast
     },
     data() {
         return {
@@ -29,6 +33,13 @@ export default {
                 id: this.department.id,
                 name: this.department.name,
             }),
+        }
+    },
+    mounted() {
+        if (this.flash.success) {
+            this.$toast.add({ severity: 'success', summary: 'Success Message', detail: this.flash.success, group: 'br', life: 3000 });
+        } else if (this.flash.error) {
+            this.$toast.add({ severity: 'error', summary: 'Error Message', detail: this.flash.error, group: 'br', life: 3000 });
         }
     },
     methods: {
@@ -76,4 +87,5 @@ export default {
 
         </div>
     </AuthenticatedLayout>
+    <Toast position="bottom-right" group="br" />
 </template>

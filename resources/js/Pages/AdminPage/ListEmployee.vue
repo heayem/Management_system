@@ -88,7 +88,7 @@ export default {
 
 <template>
     <MainLayout>
-        <div class="w-full h-screen">
+        <div class="w-full h-screen overflow-x-auto">
             <div class="p-5 card ">
                 <DataTable :value="filteredData" paginator showGridlines :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
                     selectionMode="single" dataKey="id"

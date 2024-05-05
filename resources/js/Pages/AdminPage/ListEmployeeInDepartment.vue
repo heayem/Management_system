@@ -30,7 +30,7 @@ export default {
                 { field: 'role', header: 'Role' },
                 { field: 'approver', header: 'Permission' },
                 { field: 'department', header: 'Department' },
-                { field: '[id,departmentID]', header: 'Action' },
+                { field: '', header: 'Action' },
             ],
             form: useForm({
                 id: null,
@@ -87,9 +87,9 @@ export default {
 <template>
     <MainLayout>
         <div class="w-full h-screen overflow-x-auto">
-            <div class="p-5 card ">
+            <div class="p-5 card overflow-x-auto">
                 <DataTable :value="filteredData" paginator showGridlines :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
-                    selectionMode="single" dataKey="id"
+                    selectionMode="single" dataKey="id" tableStyle="min-width: 100%"
                     :globalFilterFields="['fname', 'lname', 'phone', 'role', 'departments']" :metaKeySelection="false">
                     <template #header>
                         <div class="flex justify-between">
@@ -100,10 +100,11 @@ export default {
                                 <InputText v-model="searchQuery" placeholder="Search..." @input="search" />
                             </IconField>
                             <div class="flex justifu-center space-x-2">
-                                <Link v-if="$page.props.auth.user.role === 'administrator'"
-                                    :href="route('employee-edit-department')">
-                                <Button label="New" icon="pi pi-users" raised />
+                                <Link v-if="$page.props.auth.user.role === 'department_administrator'"
+                                    :href="route('employee-edit-department-ad')">
+                                <Button label="Workflow" icon="pi pi-sitemap" raised />
                                 </Link>
+            
                             </div>
                         </div>
                     </template>
@@ -114,7 +115,10 @@ export default {
                     </template>
                     <Column v-for="col in columns" :field="col.field" :header="col.header">
                         <template #body="{ data }">
-                            <div v-if="col.header === 'Profile'" class="flex justify-center">
+                            <div v-if="col.header === 'First Name'">
+                                {{ data[col.field] }}
+                            </div>
+                            <div v-else-if="col.header === 'Profile'" class="flex justify-center">
                                 <Image :src="'/images/' + data[col.field]" alt="Image" width="50" preview />
                             </div>
                             <div v-else-if="col.header == 'Permission' && col.header !== ''">

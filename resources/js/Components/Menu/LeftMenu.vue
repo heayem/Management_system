@@ -70,13 +70,13 @@ const adItems = ref([
         items: [
             {
                 label: 'Department request',
-                icon: 'pi pi-chart-pie',
+                icon: 'pi pi-book',
                 route: '/request',
             },
             {
                 label: 'Employee Department',
                 icon: 'pi pi-users',
-                route: '/employee-department',
+                route: 'employee-by-department',
             },
         ]
     },
