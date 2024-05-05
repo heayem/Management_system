@@ -25,9 +25,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/employee-edit/{id}', [UserController::class, 'edit'])->name('employee-edit');
     Route::post('/employee-edit', [UserController::class, 'update'])->name('employee-update');
     Route::delete('/employee-delete/{id}', [UserController::class, 'destroy'])->name('employee-delete/{id}');
-
+    
     Route::get('/employee-department', [EmployeeDepartmentController::class, 'index'])->name('employee-department');
+    Route::get('/employee-by-department', [EmployeeDepartmentController::class, 'indexBydepartment'])->name('employee-by-department');
     Route::get('/employee-edit-department-ad', [EmployeeDepartmentController::class, 'permission'])->name('employee-edit-department-ad');
+    Route::post('/employee-department-ad', [EmployeeDepartmentController::class, 'assignPermission'])->name('employee-department-ad');
     Route::get('/employee-edit-department', [EmployeeDepartmentController::class, 'department'])->name('employee-edit-department');
     Route::post('/employee-to-department', [EmployeeDepartmentController::class, 'store'])->name('employee-to-department');
     Route::delete('/employee-to-delete-department/{user_Id}/{department_Id}', [EmployeeDepartmentController::class, 'destroy'])->name('employee-delete-department');

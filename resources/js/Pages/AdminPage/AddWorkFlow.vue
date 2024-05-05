@@ -11,11 +11,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Button from 'primevue/button';
 
 
-
 export default {
     props: {
         users: [Object, Array],
         departments: [Object, Array],
+        flash: { type: Object, default: null },
     },
     components: {
         InputError,
@@ -40,10 +40,17 @@ export default {
             }),
         }
     },
+    mounted() {
+        if (this.flash.success) {
+            this.$toast.add({ severity: 'success', summary: 'Success Message', detail: this.flash.success, group: 'br', life: 3000 });
+        } else if (this.flash.error) {
+            this.$toast.add({ severity: 'error', summary: 'Error Message', detail: this.flash.error, group: 'br', life: 3000 });
+        }
+    },
     methods: {
         submit() {
             this.form.department_Id.value = this.form.user_Id.department_Id
-            this.form.post(route('employee-to-department'), {
+            this.form.post(route('employee-department-ad'), {
                 onFinish: () => this.form.reset(''),
             });
         },
@@ -59,7 +66,7 @@ export default {
             <Head title="Register" />
 
             <div class="w-full mt-3 md:w-[800px] felx flex-row justify-start items-start">
-                <Link :href="route('employee-department')">
+                <Link :href="route('employee-by-department')">
                 <Button icon="pi pi-chevron-circle-left" label="Back" severity="danger" raised />
                 </Link>
             </div>
@@ -67,7 +74,6 @@ export default {
                 @submit.prevent="submit">
 
                 <div class="grid grid-cols-2 gap-4">
-
                     <div>
                         <InputLabel for="emplopyee" value="Emplopyee" />
 
@@ -118,11 +124,11 @@ export default {
 
                 <div class="flex items-center justify-end mt-4">
                     <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Register
+                        Add to department
                     </PrimaryButton>
                 </div>
-
             </form>
         </div>
     </AuthenticatedLayout>
+    <Toast position="bottom-right" group="br" />
 </template>

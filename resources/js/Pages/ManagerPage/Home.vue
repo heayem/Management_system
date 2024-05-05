@@ -24,12 +24,10 @@ export default {
             columns: [
                 { field: 'id', header: 'ID' },
                 { field: 'user_name', header: 'Staff' },
-                { field: 'role', header: 'Role' },
                 { field: 'department_name', header: 'Department' },
                 { field: 'title', header: 'Subject' },
                 { field: 'start', header: 'Start date' },
                 { field: 'end', header: 'End date' },
-                { field: 'reason', header: 'Reason' },
                 { field: 'status', header: 'Status' },
                 { field: '', header: 'Action' },
             ],
@@ -93,7 +91,7 @@ export default {
 
 <template>
     <AuthenticatedLayout>
-        <div class="w-full h-screen">
+        <div class="w-full h-screen overflow-x-auto">
             <div class="p-5 card ">
                 <DataTable :value="filteredData" paginator showGridlines :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
                     selectionMode="single" dataKey="id"
@@ -120,11 +118,7 @@ export default {
                     </template>
                     <Column v-for="col in columns" :field="col.field" :header="col.header">
                         <template #body="{ data }">
-
-                            <div v-if="col.header === 'Reason'" @click="handleDetial(data)">
-                                <div v-html="data[col.field].substr(0, 20) + '...'"></div>
-                            </div>
-                            <div v-else-if="col.header === 'Status'" @click="handleDetial(data)">
+                            <div v-if="col.header === 'Status'" @click="handleDetial(data)">
                                 <div v-if="data[col.field] === 'pending'"
                                     class="bg-yellow-400 w-full text-center p-2 text-yellow-50">
                                     {{ data[col.field] }}

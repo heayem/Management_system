@@ -51,7 +51,8 @@ export default {
                 { name: 'Department administrator', value: 'department_administrator' },
                 { name: 'HR manager', value: 'hr_manager' },
                 { name: 'Team Leader', value: 'team_leader' },
-                { name: 'CEO', value: 'cfo' },
+                { name: 'CFO', value: 'cfo' },
+                { name: 'CEO', value: 'ceo' },
                 { name: 'Staff', value: 'staff' },
             ]
         }

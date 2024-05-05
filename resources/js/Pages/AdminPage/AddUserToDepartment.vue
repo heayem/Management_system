@@ -9,6 +9,9 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from 'primevue/dropdown';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Button from 'primevue/button';
+import Toast from 'primevue/toast';
+
+
 
 
 
@@ -16,6 +19,7 @@ export default {
     props: {
         users: [Object, Array],
         departments: [Object, Array],
+        flash: { type: Object, default: null },
     },
     components: {
         InputError,
@@ -28,7 +32,8 @@ export default {
         Link,
         Head,
         AuthenticatedLayout,
-        Button
+        Button,
+        Toast
     },
     data() {
         return {
@@ -38,6 +43,14 @@ export default {
                 department_Id: null,
                 approver: 0,
             }),
+        }
+    },
+    mounted() {
+        console.log(this.flash)
+        if (this.flash.success) {
+            this.$toast.add({ severity: 'success', summary: 'Success Message', detail: this.flash.success, group: 'br', life: 3000 });
+        } else if (this.flash.error) {
+            this.$toast.add({ severity: 'error', summary: 'Error Message', detail: this.flash.error, group: 'br', life: 3000 });
         }
     },
     methods: {
@@ -74,25 +87,25 @@ export default {
                             <Dropdown v-model="form.user_Id" :options="users" placeholder="Please select a user"
                                 optionLabel="name" class="w-full">
                                 <template #value="slotProps">
-                                    <div v-if="slotProps.value" class="flex align-items-center space-x-3">
+                                    <div v-if="slotProps.value" class="flex  items-center space-x-3 justify-center">
                                         <div>{{ slotProps.value.value }}</div>
                                         <div>{{ slotProps.value.name }}</div>
                                         <div>is </div>
                                         <div>{{ slotProps.value.role }}</div>
-                                        <img :src="'/images/' + slotProps.value.img" class="mr-2" style="width: 18px" />
+                                        <img :src="'/images/' + slotProps.value.img" class="mr-2" style="width: 30px;height: 30px;" />
                                     </div>
                                     <span v-else>
                                         {{ slotProps.placeholder }}
                                     </span>
                                 </template>
                                 <template #option="slotProps">
-                                    <div class="flex align-items-center space-x-3 justify-center">
+                                    <div class="flex  items-center space-x-3 justify-center">
                                         <div>{{ slotProps.option.value }}</div>
                                         <div>{{ slotProps.option.name }}</div>
                                         <div>is </div>
                                         <div>{{ slotProps.option.role }}</div>
                                         <img :src="'/images/' + slotProps.option.img" class="mr-2"
-                                            style="width: 18px" />
+                                            style="width: 50px;height: 50px;" />
                                     </div>
                                 </template>
                             </Dropdown>
@@ -112,27 +125,16 @@ export default {
 
                         <InputError class="mt-2" :message="form.errors.department_Id" />
                     </div>
-
-                    <div>
-                        <InputLabel for="approver" value="Can approver ?" />
-
-                        <div class="card flex justify-content-center">
-                            <Dropdown v-model="form.approver" :options="approver" optionLabel="name"
-                                placeholder="Please select" :placeholder="form.approver" class="w-full" />
-                        </div>
-
-                        <InputError class="mt-2" :message="form.errors.department_Id" />
-                    </div>
-
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
                     <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Register
+                        Add to department
                     </PrimaryButton>
                 </div>
 
             </form>
         </div>
     </AuthenticatedLayout>
+    <Toast position="bottom-right" group="br" />
 </template>

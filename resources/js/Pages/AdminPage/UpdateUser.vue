@@ -11,12 +11,13 @@ import Dropdown from 'primevue/dropdown';
 import RadioButton from 'primevue/radiobutton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Button from 'primevue/button';
-
+import Toast from 'primevue/toast';
 
 
 export default {
     props: {
-        users: Array,
+        users: [Array, Object],
+        flash: { type: Object, default: null },
     },
     components: {
         InputError,
@@ -31,7 +32,8 @@ export default {
         Link,
         Head,
         AuthenticatedLayout,
-        Button
+        Button,
+        Toast
     },
     data() {
         return {
@@ -55,10 +57,18 @@ export default {
                 { name: 'Department administrator', value: 'department_administrator' },
                 { name: 'HR manager', value: 'hr_manager' },
                 { name: 'Team Leader', value: 'team_leader' },
-                { name: 'CEO', value: 'cfo' },
+                { name: 'CFO', value: 'cfo' },
+                { name: 'CEO', value: 'ceo' },
                 { name: 'Staff', value: 'staff' },
                 { name: 'User', value: 'user' },
             ]
+        }
+    },
+    mounted() {
+        if (this.flash.success) {
+            this.$toast.add({ severity: 'success', summary: 'Success Message', detail: this.flash.success, group: 'br', life: 3000 });
+        } else if (this.flash.error) {
+            this.$toast.add({ severity: 'error', summary: 'Error Message', detail: this.flash.error, group: 'br', life: 3000 });
         }
     },
     methods: {
@@ -97,7 +107,7 @@ export default {
                     <div>
                         <InputLabel for="fname" value="First name" />
 
-                        <InputText id="fname" class="w-full" v-model="form.fname"  />
+                        <InputText id="fname" class="w-full" v-model="form.fname" />
 
                         <InputError class="mt-2" :message="form.errors.fname" />
                     </div>
@@ -105,7 +115,7 @@ export default {
                     <div>
                         <InputLabel for="lname" value="Last name" />
 
-                        <InputText id="lname" class="w-full" v-model="form.lname"  />
+                        <InputText id="lname" class="w-full" v-model="form.lname" />
 
                         <InputError class="mt-2" :message="form.errors.lname" />
                     </div>
@@ -113,7 +123,7 @@ export default {
                     <div>
                         <InputLabel for="email" value="Email" />
 
-                        <InputText id="email" class="w-full" type="email" v-model="form.email"  />
+                        <InputText id="email" class="w-full" type="email" v-model="form.email" />
 
                         <InputError class="mt-2" :message="form.errors.email" />
                     </div>
@@ -123,7 +133,7 @@ export default {
 
                         <InputText id="phone" type="tel" pattern=".{5,}"
                             title="Please enter at least 5 characters for the address" class="w-full"
-                            v-model="form.phone"  />
+                            v-model="form.phone" />
 
                         <InputError class="mt-2" :message="form.errors.phone" />
                     </div>
@@ -132,7 +142,7 @@ export default {
                     <div>
                         <InputLabel for="place_of_birth" value="Place of birth" />
 
-                        <InputText id="place_of_birth" class="w-full" v-model="form.place_of_birth"  />
+                        <InputText id="place_of_birth" class="w-full" v-model="form.place_of_birth" />
 
                         <InputError class="mt-2" :message="form.errors.place_of_birth" />
                     </div>
@@ -140,7 +150,7 @@ export default {
                     <div>
                         <InputLabel for="current_address" value="Current address" />
 
-                        <InputText id="current_address" class="w-full" v-model="form.current_address"  />
+                        <InputText id="current_address" class="w-full" v-model="form.current_address" />
 
                         <InputError class="mt-2" :message="form.errors.place_of_birth" />
                     </div>
@@ -150,7 +160,7 @@ export default {
 
 
                         <Calendar id="dob" class="w-full" dateFormat="dd/mm/yy" :manualInput="false" showIcon
-                            v-model="form.dob"  />
+                            v-model="form.dob" />
 
                         <InputError class="mt-2" :message="form.errors.phone" />
                     </div>
@@ -159,9 +169,9 @@ export default {
                     <div>
                         <InputLabel for="password" value="Password" />
 
-                        <Password id="password" class="w-full" v-model="form.password" toggleMask  />
+                        <Password id="password" class="w-full" v-model="form.password" toggleMask />
 
-                        <InputText id="password" class="w-full" type="password" v-model="form.password"  />
+                        <InputText id="password" class="w-full" type="password" v-model="form.password" />
 
                         <InputError class="mt-2" :message="form.errors.password" />
                     </div>
@@ -170,7 +180,7 @@ export default {
                         <InputLabel for="password_confirmation" value="Confirm Password" />
 
                         <InputText id="password_confirmation" class="w-full" type="password"
-                            v-model="form.password_confirmation"  />
+                            v-model="form.password_confirmation" />
 
                         <InputError class="mt-2" :message="form.errors.password_confirmation" />
                     </div>
@@ -211,11 +221,11 @@ export default {
 
                         <div class="flex flex-wrap gap-3">
                             <div class="flex align-items-center">
-                                <RadioButton v-model="form.gender" inputId="male"  name="male" value="0" />
+                                <RadioButton v-model="form.gender" inputId="male" name="male" value="0" />
                                 <label for="male" class="ml-2">Male</label>
                             </div>
                             <div class="flex align-items-center">
-                                <RadioButton v-model="form.gender" inputId="female"  name="female" value="1" />
+                                <RadioButton v-model="form.gender" inputId="female" name="female" value="1" />
                                 <label for="ingredient2" class="ml-2">Female</label>
                             </div>
                         </div>
@@ -236,4 +246,5 @@ export default {
             </form>
         </div>
     </AuthenticatedLayout>
+    <Toast position="bottom-right" group="br" />
 </template>

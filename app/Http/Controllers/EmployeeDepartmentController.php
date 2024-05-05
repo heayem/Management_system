@@ -15,8 +15,15 @@ class EmployeeDepartmentController extends Controller
     {
         $this->authorizeAdministrator();
 
-        $departments = EmployeeDepartment::getusersAndDepartment()->orderBy('users.id')->get();
+        $departments = EmployeeDepartment::getUsersAndDepartment()->orderBy('users.id')->get();
         return Inertia::render('AdminPage/ListEmployeeDepartment', ['users' => $departments]);
+    }
+    public function indexBydepartment()
+    {
+        $this->authorizeAdministrator();
+
+        $departments = EmployeeDepartment::getUsersByDepartment()->orderBy('users.id')->get();
+        return Inertia::render('AdminPage/ListEmployeeInDepartment', ['users' => $departments]);
     }
     public function store(Request $request)
     {
@@ -29,7 +36,7 @@ class EmployeeDepartmentController extends Controller
         ])->first();
 
         if ($existingRecord) {
-            return redirect('employee-edit-department')->with('error', 'Failed to assign the user.');
+            return redirect()->route('employee-edit-department')->with('error', 'Failed to assign the user.');
         } else {
             EmployeeDepartment::assignPermission($requestData);
         }
@@ -48,9 +55,27 @@ class EmployeeDepartmentController extends Controller
     public function permission()
     {
         $this->authorizeAdministrator();
+
         $users = User::getNameAndIdBydepartment()->get();
         $departments = Department::getNameAndId()->get();
         return Inertia::render('AdminPage/AddWorkFlow', ['users' => $users, 'departments' => $departments]);
+    }
+    public function assignPermission(Request $request)
+    {
+        $this->authorizeAdministrator();
+
+        $requestData = $request->all();
+        $existingRecord = EmployeeDepartment::where([
+            'user_Id' => $requestData['user_Id']['value'],
+            'department_Id' => $requestData['department_Id']['value']
+        ])->first();
+
+        if ($existingRecord) {
+            EmployeeDepartment::updatePermission($requestData);
+        } else {
+            return redirect()->route('employee-edit-department')->with('error', 'Failed to assign the user.');
+        }
+        return redirect()->route('employee-by-department')->with('success', 'The assign was successfully.');
     }
 
     public function destroy($user_Id, $departments_Id)
