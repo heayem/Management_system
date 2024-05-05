@@ -41,7 +41,6 @@ class AuthenticatedSessionController extends Controller
         if ($role === 'administrator') {
             return redirect()->route('dashboard')->with('success', 'Login was  successfully.');
         } else if (
-            $role === 'department_administrator' ||
             $role === 'hr_manager' ||
             $role === 'team_leader' ||
             $role === 'ceo' ||
@@ -51,7 +50,6 @@ class AuthenticatedSessionController extends Controller
         } else {
             return redirect()->route('request')->with('success', 'Login was  successfully.');
         }
-
     }
 
     /**

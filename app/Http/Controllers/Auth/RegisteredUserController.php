@@ -30,7 +30,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
 
-        if (!Auth::user()->hasRole('administrator')) {
+        if (!Auth::user()->hasRole(['administrator'])) {
             abort(403, 'Unauthorized action. Only administrators can access this resource.');
         }
 

@@ -74,7 +74,7 @@ class ProfileController extends Controller
 
     private function authorizeAdministrator()
     {
-        if (!Auth::user()->hasRole('administrator')) {
+        if (!Auth::user()->hasRole(['administrator'])) {
             abort(403, 'Unauthorized action. Only administrators can access this resource.');
         }
     }

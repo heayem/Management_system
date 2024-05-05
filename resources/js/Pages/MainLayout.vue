@@ -12,8 +12,9 @@ export default {
 <template>
     <authenticated-layout>
         <div class="flex flex-row">
-            <LeftMenu />
-                <slot />
+            <LeftMenu v-if="$page.props.auth.user.role ==='administrator' || $page.props.auth.user.role ==='department_administrator'" />
+
+            <slot />
         </div>
     </authenticated-layout>
 

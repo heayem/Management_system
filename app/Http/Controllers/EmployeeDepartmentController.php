@@ -44,6 +44,15 @@ class EmployeeDepartmentController extends Controller
         $departments = Department::getNameAndId()->get();
         return Inertia::render('AdminPage/AddUserToDepartment', ['users' => $users, 'departments' => $departments]);
     }
+
+    public function permission()
+    {
+        $this->authorizeAdministrator();
+        $users = User::getNameAndIdBydepartment()->get();
+        $departments = Department::getNameAndId()->get();
+        return Inertia::render('AdminPage/AddWorkFlow', ['users' => $users, 'departments' => $departments]);
+    }
+
     public function destroy($user_Id, $departments_Id)
     {
         $this->authorizeAdministrator();
@@ -58,7 +67,7 @@ class EmployeeDepartmentController extends Controller
 
     private function authorizeAdministrator()
     {
-        if (!Auth::user()->hasRole('administrator')) {
+        if (!Auth::user()->hasRole(['administrator', 'department_administrator'])) {
             abort(403, 'Unauthorized action. Only administrators can access this resource.');
         }
     }
