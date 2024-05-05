@@ -47,7 +47,7 @@ class RequestForm extends Model
                 'request_forms.type as type',
                 'request_forms.status as status',
             )
-            ->where('employee_departments.department_Id', User::getDeparment())
+            ->whereIn('employee_departments.department_Id',User::getDeparment()->get()->pluck('department_Id'))
             ->where('request_forms.type', $permission)
             ->distinct();
     }
@@ -56,5 +56,9 @@ class RequestForm extends Model
     public function users(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_Id');
+    }
+    public function approvalHistory()
+    {
+        return $this->hasMany(RequestForm::class, 'approver_Id');
     }
 }
