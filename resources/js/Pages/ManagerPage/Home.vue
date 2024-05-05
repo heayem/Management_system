@@ -21,7 +21,6 @@ export default {
             data: this.requestForms,
             showDetail: false,
             requestDetail: null,
-            toastPosition: { type: String, default: 'top-center' },
             columns: [
                 { field: 'id', header: 'ID' },
                 { field: 'user_name', header: 'Staff' },
@@ -44,13 +43,10 @@ export default {
         };
     },
     mounted() {
-        this.toastPosition = 'top-center'
         this.$toast.add({ severity: 'info', summary: 'Info', detail: 'Message Content', life: 3050 });
         if (this.flash.success) {
-            toastPosition = 'bottom-right'
             this.$toast.add({ severity: 'success', summary: 'Success Message', detail: this.flash.success, group: 'br', life: 3000 });
         } else if (this.flash.error) {
-            toastPosition = 'bottom-right'
             this.$toast.add({ severity: 'error', summary: 'Error Message', detail: this.flash.error, group: 'br', life: 3000 });
         }
     },
@@ -146,10 +142,10 @@ export default {
                                 {{ data[col.field] }}
                             </div>
                             <div v-if="col.header == 'Action'" class="flex justify-center space-x-2">
-                                <Button @click="handleStatus(data, 'approved')" class="w-24" label="Approve" severity="info"
-                                    raised />
-                                <Button @click="handleStatus(data, 'rejected')" class="w-24" label="Reject" severity="danger"
-                                    raised />
+                                <Button @click="handleStatus(data, 'approved')" class="w-24" label="Approve"
+                                    severity="info" raised />
+                                <Button @click="handleStatus(data, 'rejected')" class="w-24" label="Reject"
+                                    severity="danger" raised />
                             </div>
                         </template>
                     </Column>
@@ -194,5 +190,5 @@ export default {
             </Dialog>
         </div>
     </AuthenticatedLayout>
-    <Toast :position="toastPosition" group="br" />
+    <Toast position="bottom-right" group="br" />
 </template>

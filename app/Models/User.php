@@ -43,9 +43,9 @@ class User extends Authenticatable
     }
 
 
-    public function hasRole($role)
+    public function hasRole($roles)
     {
-        return $this->role === $role;
+        return in_array($this->role, $roles);
     }
 
     public static function deleteUser($id)
@@ -102,6 +102,17 @@ class User extends Authenticatable
     public function scopeGetNameAndId($query)
     {
         return $query->select(DB::raw("CONCAT(fname, ' ', lname) AS name"), 'id AS value', 'profile as img', 'role as role')->where('role', '!=', 'administrator');
+    }
+
+    public function scopeGetNameAndIdBydepartment($query)
+    {
+        return $query->leftJoin('employee_departments', 'users.id', '=', 'employee_departments.user_Id')
+            ->join('departments', 'departments.id', '=', 'employee_departments.department_Id')
+            ->select(DB::raw("CONCAT(users.fname, ' ', users.lname) AS name"), 'users.id AS value', 'departments.name AS department_name', 'departments.id AS department_Id', 'users.role AS role')
+            ->whereIn('employee_departments.department_Id', $this->getDeparment()->pluck('department_Id')->toArray())
+            ->where('role', '!=', 'administrator')
+            ->where('role', '!=', 'department_administrator')
+            ->orderBy('employee_departments.department_Id');
     }
 
 

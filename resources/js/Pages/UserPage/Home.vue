@@ -1,5 +1,5 @@
 <script>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import MainLayout from '@/Pages/MainLayout.vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import InputText from 'primevue/inputtext';
@@ -41,7 +41,7 @@ export default {
         }
     },
     components: {
-        AuthenticatedLayout,
+        MainLayout,
         DataTable,
         Column,
         Button,
@@ -73,7 +73,7 @@ export default {
 
 
 <template>
-    <AuthenticatedLayout>
+    <MainLayout>
         <div class="w-full h-screen">
             <div class="p-5 card ">
                 <DataTable :value="filteredData" paginator showGridlines :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
@@ -104,15 +104,15 @@ export default {
                     <Column v-for="col in columns" :field="col.field" :header="col.header">
                         <template #body="{ data }">
                             <div v-if="col.header == 'Status'" @click="handleDetial(data)">
-                                <div v-if="data[col.field] === 'pending'" 
+                                <div v-if="data[col.field] === 'pending'"
                                     class="bg-yellow-400 w-full text-center p-2 text-yellow-50">
                                     {{ data[col.field] }}
                                 </div>
-                                <div v-if="data[col.field] === 'approved'" 
+                                <div v-if="data[col.field] === 'approved'"
                                     class="bg-green-400 w-full text-center p-2 text-green-50">
                                     {{ data[col.field] }}
                                 </div>
-                                <div v-if="data[col.field] === 'rejected'" 
+                                <div v-if="data[col.field] === 'rejected'"
                                     class="bg-red-400 w-full text-center p-2 text-red-50">
                                     {{ data[col.field] }}
                                 </div>
@@ -163,6 +163,6 @@ export default {
                 </div>
             </Dialog>
         </div>
-    </AuthenticatedLayout>
+    </MainLayout>
     <Toast position="bottom-right" group="br" />
 </template>

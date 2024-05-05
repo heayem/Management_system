@@ -98,6 +98,10 @@ export default {
                                 <InputText v-model="searchQuery" placeholder="Search..." @input="search" />
                             </IconField>
                             <div class="flex justifu-center space-x-2">
+                                <Link v-if="$page.props.auth.user.role === 'department_administrator'"
+                                    :href="route('employee-edit-department-ad')">
+                                <Button label="Workflow" icon="pi pi-sitemap" raised />
+                                </Link>
                                 <Link :href="route('employee-edit-department')">
                                 <Button label="New" icon="pi pi-users" raised />
                                 </Link>
@@ -112,7 +116,7 @@ export default {
                     <Column v-for="col in columns" :field="col.field" :header="col.header">
                         <template #body="{ data }">
                             <div v-if="col.header === 'Profile'" class="flex justify-center">
-                                <Image :src="'/images/' + data[col.field]" alt="Image" width="50" preview />
+                                <Image :src="'/images/' + data[col.field]" alt="Image" width="50"  preview />
                             </div>
                             <div v-else-if="col.header !== 'Action' && col.header !== ''">
                                 {{ data[col.field] }}
