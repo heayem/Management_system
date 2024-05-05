@@ -13,9 +13,7 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
+   
     public function edit(Request $request): Response
     {
         $this->authorizeAdministrator();
@@ -26,9 +24,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
+  
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $this->authorizeAdministrator();

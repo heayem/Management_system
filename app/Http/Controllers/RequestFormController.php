@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApprovalHistory;
 use App\Models\Department;
 use App\Models\RequestForm;
 use App\Models\User;
@@ -30,6 +31,7 @@ class RequestFormController extends Controller
                 $requestForm->update([
                     'status' => $status
                 ]);
+                ApprovalHistory::rememberApprover($id,$status);
                 return redirect()->back()->with('success', 'The request was update successfully.');
             }
         } elseif ($permission->approver === 2) {
@@ -38,6 +40,7 @@ class RequestFormController extends Controller
                 $requestForm->update([
                     'status' => $status
                 ]);
+                ApprovalHistory::rememberApprover($id,$status);
                 return redirect()->back()->with('success', 'The request was update successfully.');
             }
         } elseif ($permission->approver === 3) {
@@ -46,6 +49,7 @@ class RequestFormController extends Controller
                 $requestForm->update([
                     'status' => $status
                 ]);
+                ApprovalHistory::rememberApprover($id,$status);
                 return redirect()->back()->with('success', 'The request was update successfully.');
             }
         }
@@ -116,8 +120,5 @@ class RequestFormController extends Controller
             return redirect()->route('request')->with('success', 'The request was created successfully.');
         else
             return redirect()->route('request')->with('error', 'Failed to update the request.');
-
     }
-
-
 }
